@@ -5,6 +5,8 @@ import { generate, getAllFiles } from "./utils";
 import path from "path";
 import { deleteFolder, uploadFile } from "./s3Helper";
 import { createClient } from "redis";
+import dotenv from 'dotenv'
+dotenv.config()
 // if i want to connect remote redis
 
 const publisher = createClient({
@@ -16,7 +18,7 @@ publisher.lPush('test-queue', "priyanshu-upload")
 const app = express();
 app.use(cors());
 app.use(express.json());
-const PORT = 4000;
+const PORT = process.env.PORT;
 
 app.get("/", (req, res) => {
   res.send("hello world");
