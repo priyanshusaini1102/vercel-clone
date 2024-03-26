@@ -14,6 +14,14 @@ const s3 = new S3({
 
 const app = express();
 
+app.use((req, res, next) => {
+    if (req.header('x-forwarded-proto') !== 'https') {
+        res.redirect(`https://${req.header('host')}${req.url}`);
+    } else {
+        next();
+    }
+});
+
 app.get("/*", async (req, res) => {
     // id.100xdevs.com
     const host = req.hostname;
