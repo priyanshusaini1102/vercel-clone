@@ -12,6 +12,7 @@
   "dependencies": {
     "@types/mime-types": "^2.1.4",
     "aws-sdk": "^2.1583.0",
+    "dotenv": "^16.4.5",
     "express": "^4.19.1",
     "mime-types": "^2.1.35",
     "typescript": "^5.4.3"

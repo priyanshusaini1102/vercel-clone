@@ -1,6 +1,10 @@
 import express from "express";
 import { S3 } from "aws-sdk";
 import mime from "mime-types";
+import dotenv from 'dotenv';
+dotenv.config()
+
+const PORT = process.env.PORT;
 
 const s3 = new S3({
     accessKeyId: "ce5e76915ae1449b23f7db3e2c2c709c",
@@ -37,6 +41,6 @@ app.get("/*", async (req, res) => {
     }
 })
 
-app.listen(3001, () => {
-    console.log(`Server is running on http://localhost:3001`)
+app.listen(PORT, () => {
+    console.log(`Server is running on http://localhost:${PORT}`)
 });
