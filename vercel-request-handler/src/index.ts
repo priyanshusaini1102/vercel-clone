@@ -7,16 +7,16 @@ dotenv.config()
 const PORT = process.env.PORT;
 
 const s3 = new S3({
-    accessKeyId: "ce5e76915ae1449b23f7db3e2c2c709c",
-    secretAccessKey: "cf70018845ed064417af9341cac4e68a889a0298bcfc91bb263cf09d3c58d400",
-    endpoint: "https://1d99e49ecc699244800764241af3f08a.r2.cloudflarestorage.com"
+    accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+    endpoint: process.env.S3_ENDPOINT
 })
 
 const app = express();
 
 app.use((req, res, next) => {
-    if (req.header('x-forwarded-proto') !== 'https') {
-        res.redirect(`https://${req.header('host')}${req.url}`);
+    if (!req.secure) {
+        res.redirect(301, `https://${req.headers.host}${req.url}`);
     } else {
         next();
     }
@@ -28,24 +28,20 @@ app.get("/*", async (req, res) => {
 
     const id = host.split(".")[0];
     const filePath = req.path;
-    console.log({id, filePath});
-    // res.send({id, filePath, path: `dist/${id}${filePath}`})
+    console.log({ id, filePath });
 
-    try {        
+    try {
         const contents = await s3.getObject({
             Bucket: "vercel-bucket",
             Key: `dist/${id}${filePath}`
         }).promise();
-        
-        // const type = filePath.endsWith("html") ? "text/html" : filePath.endsWith("css") ? "text/css" : "application/javascript"
-        // res.set("Content-Type", type);
 
         const contentType = mime.lookup(filePath) || "application/octet-stream";
         res.set("Content-Type", contentType);
-        
         res.send(contents.Body);
     } catch (e: any) {
-        res.send({success: false, message: e.code})
+        console.error("Error fetching S3 object:", e);
+        res.status(500).send({ success: false, message: e.message });
     }
 })
 
