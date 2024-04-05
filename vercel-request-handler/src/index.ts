@@ -7,9 +7,9 @@ dotenv.config()
 const PORT = process.env.PORT;
 
 const s3 = new S3({
-    accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
-    endpoint: process.env.S3_ENDPOINT
+    accessKeyId: "ce5e76915ae1449b23f7db3e2c2c709c",
+    secretAccessKey: "cf70018845ed064417af9341cac4e68a889a0298bcfc91bb263cf09d3c58d400",
+    endpoint: "https://1d99e49ecc699244800764241af3f08a.r2.cloudflarestorage.com"
 })
 
 const app = express();
